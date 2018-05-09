@@ -1,4 +1,5 @@
 # graph6java
+https://zenodo.org/badge/DOI/10.5281/zenodo.1244001.svg
 
 An important part of a chemical graph theorist's research work is concerned with making observations and developing intuition about a particular research problem through extensive numerical testing. Research questions in chemical graph theory are often restricted to specific graph classes in which one is either looking for extremal values and extremal graphs of graph invariants, or graphs satisfying certain constraints, or inequalities between different invariants. Many graphs from such classes can nowadays be easily generated or 
 readily downloaded from the web in nauty's graph6 format.
