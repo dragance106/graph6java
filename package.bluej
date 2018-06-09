@@ -2,8 +2,13 @@
 dependency1.from=DoubleMap
 dependency1.to=DoubleUtil
 dependency1.type=UsesDependency
+<<<<<<< HEAD
 dependency10.from=EquiTemplate
 dependency10.to=DoubleMap
+=======
+dependency10.from=SubsetTemplate
+dependency10.to=DoubleUtil
+>>>>>>> fd14eef6c20ffd3eeffe2db4a305d657b32d87be
 dependency10.type=UsesDependency
 dependency2.from=Graph
 dependency2.to=DoubleUtil
@@ -14,6 +19,7 @@ dependency3.type=UsesDependency
 dependency4.from=ReporterTemplate
 dependency4.to=DoubleUtil
 dependency4.type=UsesDependency
+<<<<<<< HEAD
 dependency5.from=SubsetTemplate
 dependency5.to=Graph
 dependency5.type=UsesDependency
@@ -41,6 +47,35 @@ package.editor.height=319
 package.editor.width=793
 package.editor.x=71
 package.editor.y=75
+=======
+dependency5.from=ExtremalTemplate
+dependency5.to=Graph
+dependency5.type=UsesDependency
+dependency6.from=ExtremalTemplate
+dependency6.to=DoubleMap
+dependency6.type=UsesDependency
+dependency7.from=EquiTemplate
+dependency7.to=Graph
+dependency7.type=UsesDependency
+dependency8.from=EquiTemplate
+dependency8.to=DoubleMap
+dependency8.type=UsesDependency
+dependency9.from=SubsetTemplate
+dependency9.to=Graph
+dependency9.type=UsesDependency
+editor.fx.0.height=722
+editor.fx.0.width=1303
+editor.fx.0.x=63
+editor.fx.0.y=26
+objectbench.height=106
+objectbench.width=895
+package.divider.horizontal=0.6
+package.divider.vertical=0.7384259259259259
+package.editor.height=312
+package.editor.width=793
+package.editor.x=130
+package.editor.y=138
+>>>>>>> fd14eef6c20ffd3eeffe2db4a305d657b32d87be
 package.frame.height=490
 package.frame.width=919
 package.numDependencies=10
@@ -93,6 +128,7 @@ target5.width=90
 target5.x=670
 target5.y=170
 target6.height=50
+<<<<<<< HEAD
 target6.name=ExtremalTemplate
 target6.naviview.expanded=true
 target6.showInterface=false
@@ -108,3 +144,20 @@ target7.type=ClassTarget
 target7.width=100
 target7.x=670
 target7.y=250
+=======
+target6.name=DoubleMap
+target6.naviview.expanded=true
+target6.showInterface=false
+target6.type=ClassTarget
+target6.width=100
+target6.x=670
+target6.y=250
+target7.height=50
+target7.name=ExtremalTemplate
+target7.naviview.expanded=true
+target7.showInterface=false
+target7.type=ClassTarget
+target7.width=140
+target7.x=380
+target7.y=20
+>>>>>>> fd14eef6c20ffd3eeffe2db4a305d657b32d87be
