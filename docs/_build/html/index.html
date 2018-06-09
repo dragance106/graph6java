@@ -1,0 +1,963 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to graph6java documentation! &#8212; graph6java v1.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-graph6java-documentation">
+<h1>Welcome to graph6java documentation!<a class="headerlink" href="#welcome-to-graph6java-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This documentation is excerpted from a preprint
+“Researcher-friendly Java framework for testing conjectures in chemical graph theory”,
+written by M. Ghebleh, A. Kanso and D. Stevanovic.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Graph theorists usually study properties of graphs from certain classes.
+Brendan McKay’s package <a class="reference external" href="http://pallini.di.uniroma1.it/">nauty</a> provides
+a generally accepted way of generating sets of smaller graphs
+constrained for connectedness, number of vertices or
+ranges of the numbers of edges or vertex degrees.
+Programs are available for generating other classes of graphs as well,
+most widely known of which are certainly
+<a class="reference external" href="http://caagt.ugent.be/buckygen/">Buckygen</a> and
+<a class="reference external" href="https://users.cecs.anu.edu.au/~bdm/plantri/">fullgen</a> for generating fullerenes,
+and <a class="reference external" href="https://users.cecs.anu.edu.au/~bdm/plantri/">plantri</a> for generating other planar graphs.
+Actually, many sets of graphs are already generated and
+ready for download in nauty’s graph6 format
+either from the <a class="reference external" href="http://hog.grinvin.org">House of Graphs</a>
+or the web pages of mathematicians like
+<a class="reference external" href="http://users.cecs.anu.edu.au/~bdm/data/graphs.html">Brendan McKay</a> and
+<a class="reference external" href="http://staffhome.ecm.uwa.edu.au/~00013890/">Gordon Royle</a>.
+Research questions that are often studied on such sets of graphs
+involve calculation of invariants and selection of particular graphs or pair of graphs
+and may have some of the following forms:</p>
+<ul class="simple">
+<li>What are the values of certain invariants (<em>such as energy and nullity</em>)
+for graphs in a given set?</li>
+<li>Which graphs in a given set satisfy certain constraints
+(<em>such as having the Laplacian energy equal to that of a complete graph</em>)?</li>
+<li>Which graphs attain the maximum or the minimum value
+of a given invariant expression (<em>such as the distance-sum heterogeneity index</em>)
+under certain constraints (<em>such as fixed number of edges</em>)?</li>
+<li>Which pairs of graphs have the same value of an invariant expression
+(<em>such as equal energies</em>)?</li>
+<li>Which pairs of graphs have similar values of one invariant expression,
+but dissimilar values of another invariant expression
+(<em>such that the difference of their Wiener indices is
+smaller than the difference of their Randi’c indices</em>)?</li>
+</ul>
+<p>To answer questions like these it is beneficial to be able
+to quickly set up numerical tests to be performed over sets of graphs.
+We describe here a Java framework that we have developed for this purpose.
+The framework is based on our existing experience with graph computations and
+it provides general templates for dealing with the above research questions.
+Templates are organised so as
+to enable graph theorists with little to no programming experience
+to easily adapt them to their own question variants,
+run them for a given set of graphs in graph6 format,
+visualise the selected graphs and, eventually,
+develop deeper intuition about the behavior of studied graph invariants.</p>
+<p>Before starting with descriptions of framework and its use,
+let us briefly explain a few main reasons for our choice of Java over other programming languages:
+its speed, a large number of useful libraries and existence of a simple development environment.
+First, while Java may not be as fast as C or C++, its speed is still comparable to them,
+and on the other hand,
+it is substantially faster than interpreted languages such as Python, Matlab (Octave) or Mathematica.
+Next, Java has a large number of useful libraries,
+some already included in its distribution
+and some freely downloadable from the internet.
+Its collection library, for example, enables
+to quickly sort graphs by invariant values or to use invariant values as keys in maps
+to instantly discover graphs with the same or similar invariant values,
+while the graph6 archive is being processed.
+The <a class="reference external" href="http://dst.lbl.gov/ACSSoftware/colt/">Colt</a> library, on the other hand,
+offers data structures optimized for eigenvalue calculations with both dense and sparse matrices.
+Above all,
+Java offers a simple integrated development environment <a class="reference external" href="http://www.bluej.org/">BlueJ</a>,
+stripped of overwhelming user interfaces of professional development environments
+such as NetBeans or Eclipse,
+enabling its users to get started more quickly,
+as can be evidenced from its rather short <a class="reference external" href="https://www.bluej.org/tutorial/tutorial-v4.pdf">manual</a>.
+BlueJ is specifically designed for teaching first programming course to undergraduate students
+(and non-computer science researchers as well),
+and is followed by an excellent introductory book to programming in Java
+(D.J. Barnes, M. Kolling, Objects First with Java, A Practical Introduction using BlueJ, Pearson, 2016),
+which is gladly recommended for further reading,
+as certain knowledge of Java programming is needed for more creative uses of the framework.</p>
+</div>
+<div class="section" id="preliminary-setup">
+<h2>Preliminary setup<a class="headerlink" href="#preliminary-setup" title="Permalink to this headline">¶</a></h2>
+<p>In order to use the framework as intended,
+installation of several pieces of software is necessary.</p>
+<div class="section" id="bluej-colt-and-the-framework-source-code">
+<h3>BlueJ, Colt and the framework source code<a class="headerlink" href="#bluej-colt-and-the-framework-source-code" title="Permalink to this headline">¶</a></h3>
+<p>BlueJ is needed to edit and run the framework source files.
+Download the appropriate installer from <a class="reference external" href="https://www.bluej.org/">https://www.bluej.org/</a> and install it.
+If you have downloaded BlueJ for Windows or Mac OS X,
+the installer already contains Java development kit (JDK),
+necessary for compilation of the framework source files.
+If you have downloaded BlueJ for another operating system,
+you need to ensure that you have JDK installed on your system as well.
+You may quickly check this by opening up a terminal window on your system
+and typing <code class="docutils literal notranslate"><span class="pre">javac</span></code> in it.
+If the terminal window replies with a lengthy help message on how to use <code class="docutils literal notranslate"><span class="pre">javac</span></code>,
+you have Java compiler installed.
+Otherwise, download and install JDK from
+<a class="reference external" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a>.</p>
+<p>The framework files may be downloaded as a zip archive from
+<a class="reference external" href="https://doi.org/10.5281/zenodo.1244000">Zenodo</a>.
+When unzipped, you get a folder with the framework source files
+and a copy of <strong>colt.jar</strong>, a Java library for eigenvalue calculations.
+BlueJ has to be instructed to load <strong>colt.jar</strong>,
+which is done by selecting <strong>Preferences</strong> command
+from either <strong>Tools</strong> menu under Windows or <strong>BlueJ</strong> menu under OS X,
+selecting <strong>Libraries</strong> tab in the newly opened window,
+clicking on <strong>Add File</strong> and choosing <strong>colt.jar</strong> from the standard file open dialog.</p>
+<p>Since the framework consists of source files that need to be edited for each conjecture separately,
+it may be a good idea to leave the folder with original source files intact
+and make a new copy of that folder for each new conjecture to be tested.
+Once that is done, you may open a copy of the framework in <strong>BlueJ</strong>
+by selecting <strong>Open Project</strong> command from <strong>Project</strong> menu
+and then opening the folder containing the framework copy from the standard file open dialog
+(to avoid confusion,
+note that you have to select and open the actual folder and not any individual file).</p>
+<div class="figure" id="id5">
+<img alt="_images/fig-bluej-bw.png" src="_images/fig-bluej-bw.png" />
+<p class="caption"><span class="caption-text">BlueJ window: Java classes containing program code are shown in the main part,
+with arrows depicting dependence of one class on another class.
+The compile button is situated on the left side,
+while the object bench is placed at the bottom of the window.</span></p>
+</div>
+<p>The main part of the BlueJ window contains classes of the current project,
+represented by named rectangles,
+which can be opened for editing by double-clicking.
+Whenever source code has been edited,
+it needs to be recompiled by clicking <strong>Compile</strong> button.
+Afterwards,
+you can right-click on a class rectangle and choose <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">&lt;Class\_name&gt;()</span></code>
+to create a new object of a given class,
+which will then be shown as a rounded rectangle at the bottom of the window,
+in the so-called object bench.
+Right-clicking an object in the object bench gives the option to call object methods,
+including <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">run(String</span> <span class="pre">inputFileName,</span> <span class="pre">...)</span></code>,
+the main method in each framework template.
+BlueJ then opens a dialog, as shown below,
+that asks for values of the method arguments,
+where <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code> denotes the file with a set of graphs in graph6 format.
+Note that <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code>, as a Java string,
+has to be entered with enclosing double quotation marks,
+and that the program expects the file to be found in the framework directory
+(unless the full path to it is typed in <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code> as well).</p>
+<div class="figure" id="id6">
+<img alt="_images/fig-bluej-method-call-bw.png" src="_images/fig-bluej-method-call-bw.png" />
+<p class="caption"><span class="caption-text">Entering arguments for an object method.</span></p>
+</div>
+</div>
+<div class="section" id="sets-of-graphs-in-graph6-format-and-nauty">
+<h3>Sets of graphs in graph6 format and nauty<a class="headerlink" href="#sets-of-graphs-in-graph6-format-and-nauty" title="Permalink to this headline">¶</a></h3>
+<p>Graph6, devised by Brendan McKay, is a format for describing graphs that originated in pre-WWW times
+when data had to be written using printable ASCII characters
+in order to be sent efficiently through e-mail.
+Basically, assuming that you deal with a simple graph,
+it starts with the upper half of its adjacency matrix (without a zero diagonal),
+lists the columns consecutively to obtain an array of bits
+and then divides this array into chunks of 6 bits each (hence the name graph6).
+The 6-bit numbers obtained in this way are added to 63
+in order to produce visible ASCII characters
+(going from <strong>?</strong> through capital letters and small letters to <strong>~</strong>).
+The resulting file then consists of lines, one for each graph,
+where the first character represents the number of vertices, also added to 63,
+and the remaining characters in the line encode the adjacency matrix as described.</p>
+<p>Quite a few sets of graphs in graph6 format are available online
+from several reliable web pages:</p>
+<ul class="simple">
+<li>Brendan McKay at <a class="reference external" href="http://cs.anu.edu.au/~bdm/data/graphs.html">http://cs.anu.edu.au/~bdm/data/graphs.html</a>
+has posted, among others, sets of small simple, Eulerian and planar graphs;</li>
+<li>Gordon Royle at <a class="reference external" href="http://www.maths.uwa.edu.au/~gordon/data.html">http://www.maths.uwa.edu.au/~gordon/data.html</a>
+has posted, among others, sets of small trees, bipartite graphs, cubic graphs;</li>
+<li>the House of Graphs at <a class="reference external" href="https://hog.grinvin.org/MetaDirectory.action">https://hog.grinvin.org/MetaDirectory.action</a>
+has a metadirectory with access to several further sets of graphs.</li>
+</ul>
+<p>In cases when you need a set of graphs that is not available online,
+new sets can be created using <code class="docutils literal notranslate"><span class="pre">geng</span></code> or <code class="docutils literal notranslate"><span class="pre">genbg</span></code> tools from <strong>nauty</strong> package.
+It is foreseen that the source code of <strong>nauty</strong>
+is downloaded from <a class="reference external" href="http://pallini.di.uniroma1.it/">http://pallini.di.uniroma1.it/</a> and compiled locally.
+This is usually not an issue for non-Windows users:
+just use short instructions provided at this site.
+If you happen to work on a Windows machine,
+a combination of <a href="#id1"><span class="problematic" id="id2">``</span></a>Code::Blocks IDE &lt;http://www.codeblocks.org/&gt;`_ and
+GCC compiler such as <a href="#id3"><span class="problematic" id="id4">``</span></a>mingw-w64 &lt;<a class="reference external" href="http://mingw-w64.org/doku.php/download">http://mingw-w64.org/doku.php/download</a>&gt;`_
+should get you started.</p>
+<p><strong>nauty</strong> tools are used from the command line.
+General format for <code class="docutils literal notranslate"><span class="pre">geng</span></code> command is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geng</span> <span class="p">[</span><span class="o">-</span><span class="n">options</span><span class="p">]</span> <span class="n">n</span> <span class="p">[</span><span class="n">mine</span><span class="p">[:</span><span class="n">maxe</span><span class="p">]]</span> <span class="p">[</span><span class="n">file</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>where brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code> denote optional arguments,
+<code class="docutils literal notranslate"><span class="pre">n</span></code> denotes the number of vertices,
+<code class="docutils literal notranslate"><span class="pre">mine</span></code> and <code class="docutils literal notranslate"><span class="pre">maxe</span></code> the minimum and maximum number of edges,
+while <code class="docutils literal notranslate"><span class="pre">file</span></code> denotes the name of the output file.
+The most often used options are <code class="docutils literal notranslate"><span class="pre">-c</span></code> to generate connected graphs,
+<code class="docutils literal notranslate"><span class="pre">-d#</span></code> for the minimum vertex degree, where <code class="docutils literal notranslate"><span class="pre">#</span></code> denotes a number,
+and <code class="docutils literal notranslate"><span class="pre">-D#</span></code> for the maximum vertex degree.
+Here are a few examples:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">geng</span> <span class="pre">-c</span> <span class="pre">9</span> <span class="pre">graph9c.g6</span></code> to generate connected graphs on 9 vertices</li>
+<li><code class="docutils literal notranslate"><span class="pre">geng</span> <span class="pre">-c</span> <span class="pre">19</span> <span class="pre">18:18</span> <span class="pre">trees19.g6</span></code> to generate trees on 19 vertices</li>
+<li><code class="docutils literal notranslate"><span class="pre">geng</span> <span class="pre">-cd3D3</span> <span class="pre">16</span> <span class="pre">cubic16.g6</span></code> for connected cubic graphs on 16 vertices</li>
+<li><code class="docutils literal notranslate"><span class="pre">geng</span> <span class="pre">-cD4</span> <span class="pre">11</span> <span class="pre">chem11.g6</span></code> for connected chemical graphs on 11 vertices</li>
+</ul>
+<p>See <code class="docutils literal notranslate"><span class="pre">geng</span> <span class="pre">-help</span></code> for list of other options.
+<code class="docutils literal notranslate"><span class="pre">genbg</span></code> is used similarly as it can be evidenced from <code class="docutils literal notranslate"><span class="pre">genbg</span> <span class="pre">-help</span></code>.</p>
+<p>You can also automate generation of graph sets.
+For example,
+if you wish to generate connected 10-vertex graphs
+classified in files by their number of edges,
+you may use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for i in \{9..45\``; do geng -c 10 \$\{i\``:\$\{i\`` graph10e\$\{i\``.g6; done
+</pre></div>
+</div>
+<p>in Unix-based terminal (Mac OS X, Linux), and:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">/</span><span class="n">L</span> \<span class="o">%</span><span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">45</span><span class="p">)</span> <span class="n">do</span> <span class="n">geng</span> <span class="o">-</span><span class="n">c</span> <span class="mi">10</span> \<span class="o">%</span><span class="n">i</span><span class="p">:</span>\<span class="o">%</span><span class="n">i</span> <span class="n">graph10e</span>\<span class="o">%</span><span class="n">i</span><span class="o">.</span><span class="n">g6</span>
+</pre></div>
+</div>
+<p>in Windows command line.</p>
+</div>
+<div class="section" id="visualisation-of-graphs-with-graphviz">
+<h3>Visualisation of graphs with Graphviz<a class="headerlink" href="#visualisation-of-graphs-with-graphviz" title="Permalink to this headline">¶</a></h3>
+<p>Graphviz is a well developed software package for visualisation of graphs.
+It can be downloaded from <a class="reference external" href="http://www.graphviz.org">http://www.graphviz.org</a> and, after successful installation,
+it offers a number of command-line tools that produce
+an image of a graph from a text file with its description.
+Such description mainly consists of the list of edges,
+with various options to additionally describe
+visual properties of vertices and edges.
+An example of a description of a small 5-vertex graph is shown below,
+which uses a small trick to force Graphviz
+to show further information about the graph (in this case its Wiener index)
+within the resulting image
+by specifying an isolated vertex with that information as a label:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Graph {
+  1 -- 2
+  2 -- 3
+  2 -- 4
+  3 -- 4
+  4 -- 5
+  v [shape=box, label=&quot;W=16&quot;]
+``
+</pre></div>
+</div>
+<div class="figure" id="id7">
+<img alt="_images/fig-smallgraph.png" src="_images/fig-smallgraph.png" />
+<p class="caption"><span class="caption-text">Visual representation of the graph above produced by <strong>neato</strong>.</span></p>
+</div>
+<p>Graphviz tools implement several well known graph drawing algorithms.
+For small undirected graphs perhaps the most useful among them is <strong>neato</strong>,
+based on minimisation of energy of the graph spring model
+(see T. Kamada, S. Kawai, An algorithm for drawing general undirected graphs,
+Inf. Process. Lett. 31 (1989), 7-15.).
+General format of <strong>neato</strong> command is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">neato</span> <span class="p">[</span><span class="o">-</span><span class="n">options</span><span class="p">]</span> <span class="n">dotfile</span> <span class="o">&gt;</span> <span class="n">outputfile</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">dotfile</span></code> denotes the text file containing description of a graph
+(usually with extension <code class="docutils literal notranslate"><span class="pre">.dot</span></code>),
+and <code class="docutils literal notranslate"><span class="pre">outputfile</span></code> denotes the resulting image file.
+Among numerous options the most useful appear to be
+<code class="docutils literal notranslate"><span class="pre">-Goverlap=false</span></code>, which implies that vertices should not overlap each other,
+<code class="docutils literal notranslate"><span class="pre">-Gsplines=true</span></code>, which allows curved edges and
+<code class="docutils literal notranslate"><span class="pre">-Tpng</span></code>, <code class="docutils literal notranslate"><span class="pre">-Tpdf</span></code>, <code class="docutils literal notranslate"><span class="pre">-Tgif</span></code> or <code class="docutils literal notranslate"><span class="pre">-Tjpg</span></code>,
+which specify the format of the output image file.
+For detailed description of other available options of <strong>neato</strong>
+and further tools contained in Graphviz,
+the reader is referred to <a class="reference external" href="http://www.graphviz.org/documentation/">http://www.graphviz.org/documentation/</a>.</p>
+<p>Calls to <strong>neato</strong> can be automated using <code class="docutils literal notranslate"><span class="pre">for</span></code> command.
+For example, to generate <strong>png</strong> images
+for all graph descriptions in a current directory,
+you may use (typing in a single line):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for file in *.dot; do neato -Goverlap=false -Gsplines=true -Tpng \$\{file\`` &gt; \$\{file\``.png; done
+</pre></div>
+</div>
+<p>in Unix-based terminal and:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="o">%</span><span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="o">*.</span><span class="n">dot</span><span class="p">)</span> <span class="n">do</span> <span class="n">neato</span> <span class="o">-</span><span class="n">Goverlap</span><span class="o">=</span><span class="n">false</span> <span class="o">-</span><span class="n">Gsplines</span><span class="o">=</span><span class="n">true</span> <span class="o">-</span><span class="n">Tpng</span> <span class="o">%</span><span class="n">f</span> <span class="o">&gt;</span> <span class="o">%</span><span class="n">f</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+</div>
+<p>in Windows command line.</p>
+</div>
+</div>
+<div class="section" id="framework-description">
+<h2>Framework description<a class="headerlink" href="#framework-description" title="Permalink to this headline">¶</a></h2>
+<p>There are five main classes in our framework:
+<strong>Graph</strong> class contains methods to construct adjacency matrix and calculate invariants,
+while the classes
+<strong>ReporterTemplate</strong>, <strong>SubsetTemplate</strong>, <strong>ExtremalTemplate</strong> and <strong>EquiTemplate</strong>
+contain worked out examples that, respectively,
+report invariant values, find a subset of graphs, find extremal graphs and
+find pairs of graphs with (approximately) the same invariant values.
+Our aim was that the templates need minimal changes
+in order to adapt to the researcher’s particular need.
+Structure and methods of these classes are explained in subsequent sections,
+and the interested reader is advised to read their actual Java code in parallel.</p>
+<div class="section" id="graph-class">
+<h3>Graph class<a class="headerlink" href="#graph-class" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Graph</span></code> class starts with the main constructor <code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">Graph(String</span> <span class="pre">s)</span></code>
+that creates a <code class="docutils literal notranslate"><span class="pre">Graph</span></code> object from its description in graph6 format.
+Provided the graph6 code is contained in <code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">g6code</span></code>,
+the corresponding <code class="docutils literal notranslate"><span class="pre">Graph</span></code> object may be constructed by the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Graph</span><span class="p">(</span><span class="n">g6code</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The constructor also populates the degree sequence and the numbers of vertices and edges,
+while the user has to call separate methods to calculate values of other invariants.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="16%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method call</th>
+<th class="head">Return type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.n()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>Number of vertices</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.m()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>Number of edges</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.degrees()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int[]</span></code></td>
+<td>Array of vertex degrees</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Amatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int[][]</span></code></td>
+<td>Adjacency matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Lmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int[][]</span></code></td>
+<td>Laplacian matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Qmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int[][]</span></code></td>
+<td>Signless Laplacian matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Dmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int[][]</span></code></td>
+<td>Distance matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Mmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[][]</span></code></td>
+<td>Modularity matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Aspectrum()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[]</span></code></td>
+<td>Adjacency spectrum</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Lspectrum()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[]</span></code></td>
+<td>Laplacian spectrum</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Qspectrum()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[]</span></code></td>
+<td>Signless Laplacian spectrum</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Dspectrum()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[]</span></code></td>
+<td>Distance spectrum</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Mspectrum()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[]</span></code></td>
+<td>Modularity spectrum</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Aeigenvectors()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[][]</span></code></td>
+<td>Eigenvectors of adjacency matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Leigenvectors()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[][]</span></code></td>
+<td>Eigenvectors of Laplacian matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Qeigenvectors()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[][]</span></code></td>
+<td>Eigenvectors of signless Laplacian matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Deigenvectors()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[][]</span></code></td>
+<td>Eigenvectors of distance matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Meigenvectors()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double[][]</span></code></td>
+<td>Eigenvectors of modularity matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Acospectral(h)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks A-cospectrality of <code class="docutils literal notranslate"><span class="pre">g</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Lcospectral(h)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks L-cospectrality of <code class="docutils literal notranslate"><span class="pre">g</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Qcospectral(h)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks Q-cospectrality of <code class="docutils literal notranslate"><span class="pre">g</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Dcospectral(h)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks D-cospectrality of <code class="docutils literal notranslate"><span class="pre">g</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Mcospectral(h)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks M-cospectrality of <code class="docutils literal notranslate"><span class="pre">g</span></code> and <code class="docutils literal notranslate"><span class="pre">h</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Aintegral()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks whether A-spectrum consists of integers</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Lintegral()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks whether L-spectrum consists of integers</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Qintegral()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks whether Q-spectrum consists of integers</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Dintegral()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks whether D-spectrum consists of integers</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Mintegral()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">boolean</span></code></td>
+<td>Checks whether M-spectrum consists of integers</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Aenergy()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Energy of adjacency matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Lenergy()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Energy of Laplacian matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Qenergy()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Energy of signless Laplacian matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Denergy()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Energy of distance matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Menergy()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Energy of modularity matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.LEL()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Laplacian-like energy</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.estrada()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Estrada index</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.Lestrada()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Laplacian Estrada index</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.diameter()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>Diameter</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.radius()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>Radius</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.Wiener()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>Wiener index</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.randic()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Randic index</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.zagreb1()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>The first Zagreb index</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.zagreb2()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">int</span></code></td>
+<td>The second Zagreb index</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.dshi()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">double</span></code></td>
+<td>Distance-sum heterogeneity index</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.printAmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>String representing adjacency matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.printLmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>String with Laplacian matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.printQmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>String with signless Laplacian matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.printDmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>String with distance matrix</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.printMmatrix()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>String with modularity matrix</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.printEdgeList()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>String representing edge list</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.printDotFormat()</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>Graph description in dot format</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.printDotFormat(data)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">String</span></code></td>
+<td>Dot format description with added
+isolated vertex showing <code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">data</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">g.saveDotFormat(filename)</span></code></td>
+<td>none</td>
+<td>Saves graph description in dot format
+to the named file for later visualization</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">g.saveDotFormat(filename,</span> <span class="pre">data)</span></code></td>
+<td>none</td>
+<td>Saves dot format description to file
+with added isolated vertex showing <code class="docutils literal notranslate"><span class="pre">data</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The class contains one more constructor <code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">Graph(int</span> <span class="pre">A[][])</span></code>
+that creates a <code class="docutils literal notranslate"><span class="pre">Graph</span></code> object from the supplied adjacency matrix.
+This constructor may be used, for example,
+if one needs to create complement of a graph or a result of another graph operation:
+the original graph is created from its graph6 code by the first constructor,
+an adjacency matrix <code class="docutils literal notranslate"><span class="pre">A</span></code> of the new graph is calculated by user code and
+the new <code class="docutils literal notranslate"><span class="pre">Graph</span></code> object is then constructed by <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">=</span> <span class="pre">new</span> <span class="pre">Graph(A);</span></code></p>
+<p>Remaining methods in this class, listed in table above,
+calculate various invariants of a graph, with a good deal of them representing its spectral properties.
+<code class="docutils literal notranslate"><span class="pre">Graph</span></code> class also contains several auxiliary static methods
+(which are called with <code class="docutils literal notranslate"><span class="pre">Graph.method()</span></code> instead of <code class="docutils literal notranslate"><span class="pre">g.method()</span></code>)
+for calculating spectra and eigenvectors of integer and real-valued (double) matrices,
+checking that a matrix has integral spectrum,
+calculating deviation of array entries and matrix energy, etc.,
+which may be helpful to researchers who add new invariants to this class.
+These are recognized in the source code by the keyword <code class="docutils literal notranslate"><span class="pre">static</span></code>.</p>
+<p>Note that calculations of spectral properties
+depend on numerical routines which, in general, return approximate results.
+When checking mutual equality of such quantities
+(as in <code class="docutils literal notranslate"><span class="pre">g.Acospectral(h)</span></code> or <code class="docutils literal notranslate"><span class="pre">g.Aintegral()</span></code>),
+one has to allow a certain degree of freedom
+by checking that, actually, absolute value of the difference of two quantities is sufficiently small.
+This is enabled by methods implemented in classes <code class="docutils literal notranslate"><span class="pre">DoubleUtil</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleMap</span></code>.
+This means that the use of approximate results
+may also return either false positives or false negatives.
+While we have not yet come at an example of a false negative,
+false positives do appear from time to time,
+so that the examples obtained with the use of this framework
+should be checked with a symbolic computation software
+(such as Mathematica, Maple or Sage)
+prior to publication.</p>
+</div>
+<div class="section" id="reportertemplate-class">
+<h3>ReporterTemplate class<a class="headerlink" href="#reportertemplate-class" title="Permalink to this headline">¶</a></h3>
+<p>Class <code class="docutils literal notranslate"><span class="pre">ReporterTemplate</span></code> simply serves to list values of selected invariants for all graphs in a given set.
+Its main method is <code class="docutils literal notranslate"><span class="pre">run(String</span> <span class="pre">inputFileName,</span> <span class="pre">int</span> <span class="pre">createDotFiles)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code> contains the name of the file (i.e., the path to the file)
+with a set of graphs in graph6 format, and
+<code class="docutils literal notranslate"><span class="pre">createDotFiles</span></code> is a flag
+that signals whether the method should also output dot files for each graph in the set:
+it should be set to nonzero to output dot files, and to zero otherwise.
+Beware that setting this flag to nonzero for a set with a large number of graphs
+will create that many dot files in the folder and may significantly slow down the operating system
+until the method finishes its work.
+Pseudo-code of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method is shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">:</span> <span class="n">procedure</span> <span class="n">run</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">,</span> <span class="n">createDotFiles</span><span class="p">)</span>
+<span class="mi">2</span><span class="p">:</span>   <span class="n">Open</span> <span class="n">inputFileName</span> <span class="k">for</span> <span class="n">reading</span>
+<span class="mi">3</span><span class="p">:</span>   <span class="n">Open</span> <span class="n">new</span> <span class="n">file</span> <span class="n">named</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.csv&quot;</span> <span class="k">for</span> <span class="n">writing</span>
+<span class="mi">4</span><span class="p">:</span>   <span class="n">While</span> <span class="n">line</span> <span class="k">with</span> <span class="n">g6code</span> <span class="n">read</span> <span class="kn">from</span> <span class="nn">inputFileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">empty</span> <span class="n">do</span>
+<span class="mi">5</span><span class="p">:</span>     <span class="n">Construct</span> <span class="n">Graph</span> <span class="n">g</span> <span class="kn">from</span> <span class="nn">its</span> <span class="n">g6code</span>
+<span class="mi">6</span><span class="p">:</span>     <span class="n">Calculate</span> <span class="n">necessary</span> <span class="n">invariants</span> <span class="n">of</span> <span class="n">g</span>
+<span class="mi">7</span><span class="p">:</span>     <span class="n">Output</span> <span class="n">g6code</span> <span class="ow">and</span> <span class="n">invariant</span> <span class="n">values</span> <span class="n">to</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.cvs&quot;</span>
+<span class="mi">8</span><span class="p">:</span>     <span class="n">If</span> <span class="n">createDotFiles</span><span class="o">!=</span><span class="mi">0</span>
+<span class="mi">9</span><span class="p">:</span>       <span class="n">Save</span> <span class="n">dot</span> <span class="nb">format</span> <span class="n">of</span> <span class="n">g</span> <span class="n">to</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">file</span>
+<span class="mi">10</span><span class="p">:</span>  <span class="n">Close</span> <span class="nb">input</span> <span class="ow">and</span> <span class="n">output</span> <span class="n">files</span>
+</pre></div>
+</div>
+<p>When you download the framework from <a class="reference external" href="https://doi.org/10.5281/zenodo.1244000">https://doi.org/10.5281/zenodo.1244000</a>,
+the <code class="docutils literal notranslate"><span class="pre">run</span></code> method of <code class="docutils literal notranslate"><span class="pre">ReporterTemplate</span></code> class is set to report
+values of energy and nullity for graphs in the set.
+To report other invariants, one needs to customize
+parts of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method corresponding to steps 6 and 7 in the above algorithm.
+These steps correspond to the following snippet in the source code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Calculate</span> <span class="n">necessary</span> <span class="n">invariants</span> <span class="n">here</span><span class="p">:</span>
+<span class="n">double</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">energy</span><span class="p">();</span>
+
+<span class="n">double</span><span class="p">[]</span> <span class="n">eigs</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">Aspectrum</span><span class="p">();</span>
+<span class="nb">int</span> <span class="n">nullity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">g</span><span class="o">.</span><span class="n">n</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">DoubleUtil</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">eigs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">nullity</span><span class="o">++</span><span class="p">;</span>
+
+<span class="o">//</span> <span class="n">Output</span> <span class="n">g6code</span> <span class="ow">and</span> <span class="n">invariant</span> <span class="n">values</span> <span class="n">here</span><span class="p">:</span>
+<span class="n">outResults</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">g6code</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="n">energy</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="n">nullity</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Let us briefly explain this code snippet.
+First, each variable in a Java program
+must be defined with its type when used for the first time:
+<code class="docutils literal notranslate"><span class="pre">int</span></code> is needed to define the variable <code class="docutils literal notranslate"><span class="pre">nullity</span></code>
+that will keep the value of nullity (initially set to 0),
+and similarly, <code class="docutils literal notranslate"><span class="pre">double</span></code> is needed to define <code class="docutils literal notranslate"><span class="pre">energy</span></code>
+and <code class="docutils literal notranslate"><span class="pre">double[]</span></code> is needed for eigenvalues <code class="docutils literal notranslate"><span class="pre">eigs</span></code>.
+(Return types of <code class="docutils literal notranslate"><span class="pre">Graph</span></code> methods are listed in the above table.)
+However, type is not needed when using the variables afterwards:
+thus we write just <code class="docutils literal notranslate"><span class="pre">nullity++</span></code> (which increases the value of <code class="docutils literal notranslate"><span class="pre">nullity</span></code> by 1),
+and not <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nullity++</span></code>.
+This snippet also illustrates the use of the static <code class="docutils literal notranslate"><span class="pre">equals</span></code> method in <code class="docutils literal notranslate"><span class="pre">DoubleUtil</span></code> class:
+we will increase nullity whenever we come across an eigenvalue that is close to 0,
+which is checked by the command <code class="docutils literal notranslate"><span class="pre">DoubleUtil.equals(eigs[i],</span> <span class="pre">0.0)</span></code>.
+To output values of invariants,
+one needs to print a line (<code class="docutils literal notranslate"><span class="pre">println</span></code>) to the output file which is kept in the object <code class="docutils literal notranslate"><span class="pre">outResults</span></code>
+(hence <code class="docutils literal notranslate"><span class="pre">outResults.println(string)</span></code>).
+The string to be output is created with the string concatenation operator <code class="docutils literal notranslate"><span class="pre">+</span></code>:
+if the first argument of <code class="docutils literal notranslate"><span class="pre">+</span></code> is a string (and <code class="docutils literal notranslate"><span class="pre">g6code</span></code> is),
+then all the remaining arguments will be treated as strings as well.
+Hence the result of <code class="docutils literal notranslate"><span class="pre">g6code</span> <span class="pre">+</span> <span class="pre">&quot;,</span> <span class="pre">&quot;</span> <span class="pre">+</span> <span class="pre">energy</span> <span class="pre">+</span> <span class="pre">&quot;,</span> <span class="pre">&quot;</span> <span class="pre">+</span> <span class="pre">nullity</span></code> will be
+a comma-separated string containing the values of graph’s <code class="docutils literal notranslate"><span class="pre">g6code</span></code>, <code class="docutils literal notranslate"><span class="pre">energy</span></code> and <code class="docutils literal notranslate"><span class="pre">nullity</span></code>,
+that is written in the output file.</p>
+<p>Consult source code of the <code class="docutils literal notranslate"><span class="pre">ReporterTemplate</span></code> class
+for implementation of the remaining steps of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
+</div>
+<div class="section" id="subsettemplate-class">
+<h3>SubsetTemplate class<a class="headerlink" href="#subsettemplate-class" title="Permalink to this headline">¶</a></h3>
+<p>Class <code class="docutils literal notranslate"><span class="pre">SubsetTemplate</span></code> serves to
+select a subset of graphs in a given set which satisfy a given condition and
+output the subset and further data to a new file.
+Its main method is <code class="docutils literal notranslate"><span class="pre">run(String</span> <span class="pre">inputFileName,</span> <span class="pre">int</span> <span class="pre">createDotFiles)</span></code>
+where <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code> gives the name of the graph6 file with the set of graphs
+and <code class="docutils literal notranslate"><span class="pre">createDotFiles</span></code> is a zero-nonzero flag of whether
+the method should also output dot files for each graph that satisfies the condition
+(nonzero to output dot files, and zero otherwise).
+As in the case of <code class="docutils literal notranslate"><span class="pre">ReporterTemplate</span></code> class,
+nonzero value of <code class="docutils literal notranslate"><span class="pre">createDotFiles</span></code> should only be used
+if you expect a handful of graphs in the subset (and not thousands).
+Pseudo-code of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method is shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">:</span> <span class="n">procedure</span> <span class="n">run</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">,</span> <span class="n">createDotFiles</span><span class="p">)</span>
+<span class="mi">2</span><span class="p">:</span>   <span class="n">Open</span> <span class="n">inputFileName</span> <span class="k">for</span> <span class="n">reading</span>
+<span class="mi">3</span><span class="p">:</span>   <span class="n">Open</span> <span class="n">new</span> <span class="n">file</span> <span class="n">named</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.tex&quot;</span> <span class="k">for</span> <span class="n">writing</span>
+<span class="mi">4</span><span class="p">:</span>   <span class="n">While</span> <span class="n">line</span> <span class="k">with</span> <span class="n">g6code</span> <span class="n">read</span> <span class="kn">from</span> <span class="nn">inputFileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">empty</span> <span class="n">do</span>
+<span class="mi">5</span><span class="p">:</span>     <span class="n">Construct</span> <span class="n">Graph</span> <span class="n">g</span> <span class="kn">from</span> <span class="nn">its</span> <span class="n">g6code</span>
+<span class="mi">6</span><span class="p">:</span>     <span class="n">Calculate</span> <span class="n">necessary</span> <span class="n">invariants</span> <span class="n">of</span> <span class="n">g</span>
+<span class="mi">7</span><span class="p">:</span>     <span class="n">Check</span> <span class="n">whether</span> <span class="n">the</span> <span class="n">given</span> <span class="n">condition</span> <span class="n">holds</span> <span class="k">for</span> <span class="n">g</span>
+<span class="mi">8</span><span class="p">:</span>     <span class="n">If</span> <span class="n">condition</span> <span class="n">holds</span>
+<span class="mi">9</span><span class="p">:</span>       <span class="n">Output</span> <span class="n">g6code</span> <span class="ow">and</span> <span class="n">invariant</span> <span class="n">values</span> <span class="n">to</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.tex&quot;</span>
+<span class="mi">10</span><span class="p">:</span>      <span class="n">If</span> <span class="n">createDotFiles</span><span class="o">!=</span><span class="mi">0</span>
+<span class="mi">11</span><span class="p">:</span>        <span class="n">Save</span> <span class="n">dot</span> <span class="nb">format</span> <span class="n">of</span> <span class="n">g</span> <span class="n">to</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">file</span>
+<span class="mi">12</span><span class="p">:</span>  <span class="n">Close</span> <span class="nb">input</span> <span class="ow">and</span> <span class="n">output</span> <span class="n">files</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method in the downloaded framework files is set to select integral graphs from a set of graphs.
+To change it to select different types of graphs,
+one needs to update parts of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method corresponding to steps 6 and 7 of algorithm above.
+These steps initially correspond to the following code snippet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>// Calculate necessary invariants here:
+double[] eigs = g.Aspectrum();
+
+// Write a criterion to select a graph into the subset here:
+int integral = 1;
+for (int i=0; i&lt;g.n(); i++)
+    if (!DoubleUtil.equals(eigs[i], Math.round(eigs[i]))) {
+        integral = 0;
+        break;
+    }
+
+// Output selected graphs and other data to the output file here:
+if (integral==1) {
+    ...
+}
+</pre></div>
+</div>
+<p>After obtaining a copy of adjacency eigenvalues of <code class="docutils literal notranslate"><span class="pre">g</span></code> in <code class="docutils literal notranslate"><span class="pre">double[]</span> <span class="pre">eigs</span></code>,
+the code goes on to check their integrality.
+The variable <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">integral</span></code> serves as a flag here: it is initially set to 1,
+and becomes 0 if there is an eigenvalue that is not sufficiently close
+(<code class="docutils literal notranslate"><span class="pre">!DoubleUtil.equals()</span></code>, where <code class="docutils literal notranslate"><span class="pre">!</span></code> denotes logical negation)
+to its nearest integer, as returned by <code class="docutils literal notranslate"><span class="pre">Math.round(eigs[i])</span></code>.
+In such case there is no need to check the remaining eigenvalues,
+so that the program interrupts the current loop with <code class="docutils literal notranslate"><span class="pre">break</span></code> and proceeds further with execution.
+Finally, output is produced if the flag <code class="docutils literal notranslate"><span class="pre">integral</span></code> had remained equal to~1 after the <code class="docutils literal notranslate"><span class="pre">for</span></code> loop.
+Note that <code class="docutils literal notranslate"><span class="pre">Graph</span></code> class already contains method <code class="docutils literal notranslate"><span class="pre">Aintegral()</span></code>,
+so that the whole previous code snippet can be replaced simply with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">Aintegral</span><span class="p">())</span> <span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Nevertheless, we left it in the form above due to its instructiveness.</p>
+<p>The reader may also consult source code of the <code class="docutils literal notranslate"><span class="pre">SubsetTemplate</span></code> class
+for example of translating an array of eigenvalues into a string
+for its addition to the dot file.</p>
+</div>
+<div class="section" id="extremaltemplate-class">
+<h3>ExtremalTemplate class<a class="headerlink" href="#extremaltemplate-class" title="Permalink to this headline">¶</a></h3>
+<p>Class <code class="docutils literal notranslate"><span class="pre">ExtremalTemplate</span></code> serves to select a given number of extremal values (either minimal or maximal)
+of a given invariant and to also report all graphs in the set with those invariant values.
+Its main method is <code class="docutils literal notranslate"><span class="pre">run(String</span> <span class="pre">inputFileName,</span> <span class="pre">int</span> <span class="pre">extnum,</span> <span class="pre">int</span> <span class="pre">lookformax)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code> specifies the graph6 set of graphs,
+<code class="docutils literal notranslate"><span class="pre">extnum</span></code> gives the number of extremal values to be reported and
+<code class="docutils literal notranslate"><span class="pre">lookformax</span></code> determines whether the method is to
+look for maximum values (<code class="docutils literal notranslate"><span class="pre">lookformax&gt;=0</span></code>) or minimal values (<code class="docutils literal notranslate"><span class="pre">lookformax&lt;0</span></code>).
+Pseudo-code of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method is given below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">:</span>  <span class="n">procedure</span> <span class="n">run</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">,</span> <span class="n">extnum</span><span class="p">,</span> <span class="n">lookformax</span><span class="p">)</span>
+<span class="mi">2</span><span class="p">:</span>    <span class="n">Open</span> <span class="n">inputFileName</span> <span class="k">for</span> <span class="n">reading</span>
+<span class="mi">3</span><span class="p">:</span>    <span class="n">Open</span> <span class="n">new</span> <span class="n">file</span> <span class="n">named</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.tex&quot;</span> <span class="k">for</span> <span class="n">writing</span>
+<span class="mi">4</span><span class="p">:</span>    <span class="n">Construct</span> <span class="n">an</span> <span class="n">empty</span> <span class="nb">map</span>
+<span class="mi">5</span><span class="p">:</span>    <span class="n">While</span> <span class="n">line</span> <span class="k">with</span> <span class="n">g6code</span> <span class="n">read</span> <span class="kn">from</span> <span class="nn">inputFileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">empty</span> <span class="n">do</span>
+<span class="mi">6</span><span class="p">:</span>      <span class="n">Construct</span> <span class="n">Graph</span> <span class="n">g</span> <span class="kn">from</span> <span class="nn">its</span> <span class="n">g6code</span>
+<span class="mi">7</span><span class="p">:</span>      <span class="n">Calculate</span> <span class="n">necessary</span> <span class="n">invariant</span> <span class="n">of</span> <span class="n">g</span> <span class="ow">and</span> <span class="n">put</span> <span class="n">it</span> <span class="n">into</span> <span class="n">key</span>
+<span class="mi">8</span><span class="p">:</span>      <span class="n">If</span> <span class="nb">map</span> <span class="n">has</span> <span class="n">less</span> <span class="n">than</span> <span class="n">extnum</span> <span class="n">keys</span> <span class="ow">or</span> <span class="nb">map</span> <span class="n">already</span> <span class="n">contains</span> <span class="n">this</span> <span class="n">key</span> <span class="n">then</span>
+<span class="mi">9</span><span class="p">:</span>        <span class="n">Put</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">g6code</span> <span class="n">into</span> <span class="nb">map</span>
+<span class="mi">10</span><span class="p">:</span>     <span class="n">Else</span>
+<span class="mi">11</span><span class="p">:</span>       <span class="n">If</span> <span class="n">lookformax</span><span class="o">&lt;</span><span class="mi">0</span> <span class="n">then</span>
+<span class="mi">12</span><span class="p">:</span>         <span class="n">If</span> <span class="n">key</span> <span class="ow">is</span> <span class="n">smaller</span> <span class="n">than</span> <span class="n">the</span> <span class="n">largest</span> <span class="n">key</span> <span class="n">currently</span> <span class="ow">in</span> <span class="nb">map</span> <span class="n">then</span>
+<span class="mi">13</span><span class="p">:</span>           <span class="n">Remove</span> <span class="n">the</span> <span class="n">largest</span> <span class="n">key</span> <span class="kn">from</span> <span class="nn">map</span>
+<span class="mi">14</span><span class="p">:</span>           <span class="n">Put</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">g6code</span> <span class="n">into</span> <span class="nb">map</span>
+<span class="mi">15</span><span class="p">:</span>       <span class="n">Else</span>
+<span class="mi">16</span><span class="p">:</span>         <span class="n">If</span> <span class="n">key</span> <span class="ow">is</span> <span class="n">larger</span> <span class="n">than</span> <span class="n">the</span> <span class="n">smallest</span> <span class="n">key</span> <span class="n">currently</span> <span class="ow">in</span> <span class="nb">map</span> <span class="n">then</span>
+<span class="mi">17</span><span class="p">:</span>           <span class="n">Remove</span> <span class="n">the</span> <span class="n">smallest</span> <span class="n">key</span> <span class="kn">from</span> <span class="nn">map</span>
+<span class="mi">18</span><span class="p">:</span>           <span class="n">Put</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">g6code</span> <span class="n">into</span> <span class="nb">map</span>
+<span class="mi">19</span><span class="p">:</span>   <span class="n">For</span> <span class="n">each</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">map</span>
+<span class="mi">20</span><span class="p">:</span>     <span class="n">Output</span> <span class="n">key</span> <span class="n">to</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.tex&quot;</span>
+<span class="mi">21</span><span class="p">:</span>     <span class="n">For</span> <span class="n">each</span> <span class="n">g6code</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">map</span>
+<span class="mi">22</span><span class="p">:</span>       <span class="n">Output</span> <span class="n">g6code</span> <span class="n">to</span> <span class="n">inputFileName</span><span class="o">+</span><span class="s2">&quot;.results.tex&quot;</span>
+<span class="mi">23</span><span class="p">:</span>       <span class="n">Construct</span> <span class="n">Graph</span> <span class="n">g</span> <span class="kn">from</span> <span class="nn">its</span> <span class="n">g6code</span>
+<span class="mi">24</span><span class="p">:</span>       <span class="n">Save</span> <span class="n">dot</span> <span class="nb">format</span> <span class="n">of</span> <span class="n">g</span> <span class="k">with</span> <span class="n">key</span> <span class="k">as</span> <span class="n">data</span> <span class="n">to</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">file</span>
+<span class="mi">25</span><span class="p">:</span>   <span class="n">Close</span> <span class="nb">input</span> <span class="ow">and</span> <span class="n">output</span> <span class="n">files</span>
+</pre></div>
+</div>
+<p>This <code class="docutils literal notranslate"><span class="pre">run</span></code> method is slightly more complicated than <code class="docutils literal notranslate"><span class="pre">run</span></code> methods in previous two classes
+due to necessity to keep track of a dynamically changing map of keys and corresponding g6code strings.
+This functionality is provided by auxiliary class <code class="docutils literal notranslate"><span class="pre">DoubleMap</span></code>,
+extended upon the standard class <code class="docutils literal notranslate"><span class="pre">TreeMap</span></code>,
+which enables one to identify keys that are sufficienty close to each other
+(i.e., that differ by less than <code class="docutils literal notranslate"><span class="pre">DoubleUtil.DOUBLE_EQUALITY_THRESHOLD</span></code> in absolute value,
+which is set to 10^(-8) in the framework files).
+As before, caution must be taken as this may
+either wrongly identify truly different values
+or treat essentially equal values calculated with sufficiently large numerical errors as different
+(the latter case could be easily dealt with
+by increasing the value of <code class="docutils literal notranslate"><span class="pre">DoubleUtil.DOUBLE_EQUALITY_THRESHOLD</span></code>).
+Hence results should be checked independently with a symbolic computation package prior to publication.
+Nevertheless, the speed and simplicity with which initial results may be obtained in this way
+warrants usefulness of the framework.</p>
+<p>It should be noted that the pairs kept in a <code class="docutils literal notranslate"><span class="pre">DoubleMap</span></code> object
+consist of a <code class="docutils literal notranslate"><span class="pre">Double</span></code> object <code class="docutils literal notranslate"><span class="pre">key</span></code> and a collection of strings (<code class="docutils literal notranslate"><span class="pre">Vector&lt;String&gt;</span></code>),
+each of which represents g6 code of a graph with that value of the key.
+The key is calculated in step 7 of the above algorithm,
+and in the framework version this step corresponds to the line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Calculate</span> <span class="n">necessary</span> <span class="n">invariant</span> <span class="n">here</span> <span class="ow">and</span> <span class="n">make</span> <span class="n">it</span> <span class="n">the</span> <span class="n">key</span><span class="p">:</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Double</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">dshi</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>The invariant used here is the distance-sum heterogeneity index,
+defined by Estrada and Vargas-Estrada in <em>Applied Math. Comput.</em> 218 (2012), 10393–10405,
+and implemented as a method of <code class="docutils literal notranslate"><span class="pre">Graph</span></code> class.
+Note that <code class="docutils literal notranslate"><span class="pre">g.dshi()</span></code> returns <code class="docutils literal notranslate"><span class="pre">double</span></code> value, an ordinary real number,
+while <code class="docutils literal notranslate"><span class="pre">key</span></code> is defined to be of type <code class="docutils literal notranslate"><span class="pre">Double</span></code>,
+which represents a Java object holding a <code class="docutils literal notranslate"><span class="pre">double</span></code> value inside itself.
+This inconsistency is a peculiarity of Java,
+as collections (such as maps) are meant to keep objects (such as <code class="docutils literal notranslate"><span class="pre">Double</span></code>)
+and not primitive number types (such as <code class="docutils literal notranslate"><span class="pre">double</span></code>).
+As a consequence, when changing the above code,
+one needs to pay attention that the <code class="docutils literal notranslate"><span class="pre">key</span></code> has to be constructed as a <code class="docutils literal notranslate"><span class="pre">Double</span></code> object
+from the provided value of the invariant:
+if the value is calculated as <code class="docutils literal notranslate"><span class="pre">val</span></code>,
+then the corresponding code will be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Double</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>On the other hand,
+it does not matter if <code class="docutils literal notranslate"><span class="pre">val</span></code> is of type <code class="docutils literal notranslate"><span class="pre">double</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code>—constructor
+of <code class="docutils literal notranslate"><span class="pre">Double</span></code> will correctly deal with both cases.</p>
+<p>In addition, <code class="docutils literal notranslate"><span class="pre">run</span></code> method assumes that
+the number of extremal graphs found will be relatively small,
+so that at the end it outputs each extremal graph with key added as data to a separate dot file
+for later visualization with Graphviz.
+For easier identification of dot files,
+their names include number of vertices, value of the key and ordinal number of graph with that key,
+interspersed by user defined strings.
+The reader may further consult source code for
+details of working with maps and collections and naming output files.</p>
+</div>
+<div class="section" id="equitemplate-class">
+<h3>EquiTemplate class<a class="headerlink" href="#equitemplate-class" title="Permalink to this headline">¶</a></h3>
+<p>Class <code class="docutils literal notranslate"><span class="pre">EquiTemplate</span></code> serves to find subsets of graphs
+having (approximately) equal values of a selected invariant in a given set of graphs.
+Its main method is <code class="docutils literal notranslate"><span class="pre">run(String</span> <span class="pre">inputFileName)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">inputFileName</span></code> specifies the set of graphs.
+Pseudo-code of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method is shown below:</p>
+<p>1:  procedure run(inputFileName)
+2:    Open inputFileName for reading
+3:    Open new file named inputFileName+”.results.tex” for writing
+4:    Construct an empty map
+5:    While line with g6code read from inputFileName is not empty do
+6:      Construct Graph g from its g6code
+7:      Calculate necessary invariant of g and put it into key
+8:      Put key and g6code into map
+9:    For each key in map do
+10:     If collection of strings corresponding to key has at least two entries then
+11:       Output key to inputFileName+”.results.tex”
+12:       For each g6code corresponding to key in map do
+13:         Output g6code to inputFileName+”.results.tex”
+14:         Construct Graph g from its g6code
+15:         Save dot format of g with key as data to a separate file
+16:   Close input and output files</p>
+<p>This <code class="docutils literal notranslate"><span class="pre">run</span></code> method also relies on <code class="docutils literal notranslate"><span class="pre">DoubleMap</span></code> class for its operation.
+For each graph in a set
+it simply puts the <code class="docutils literal notranslate"><span class="pre">key</span></code> (=calculated invariant value) and <code class="docutils literal notranslate"><span class="pre">g6code</span></code> into <code class="docutils literal notranslate"><span class="pre">DoubleMap</span> <span class="pre">map</span></code>,
+while <code class="docutils literal notranslate"><span class="pre">DoubleMap</span></code> internally takes care
+of checking whether <code class="docutils literal notranslate"><span class="pre">map</span></code> already contains another key <code class="docutils literal notranslate"><span class="pre">key2</span></code>
+that is sufficiently close to the provided <code class="docutils literal notranslate"><span class="pre">key</span></code>,
+in which case <code class="docutils literal notranslate"><span class="pre">g6code</span></code> is added to the collection of strings classified under <code class="docutils literal notranslate"><span class="pre">key2</span></code>
+(otherwise, <code class="docutils literal notranslate"><span class="pre">key</span></code> is added as a new key in <code class="docutils literal notranslate"><span class="pre">map</span></code>
+with the corresponding collection consisting solely of <code class="docutils literal notranslate"><span class="pre">g6code</span></code>).
+After <code class="docutils literal notranslate"><span class="pre">map</span></code> is fully populated, it is enough to traverse it:
+all graphs that have sufficiently equal invariant values will be classified under the same key,
+so that one has to report each key whose collection contains at least two entries,
+together with the list of corresponding graph6 codes and dot files for visualization with Graphviz.</p>
+<p>This simplicity, however, is hampered by the fact that
+the whole set of graphs together with keys has to be kept in internal memory.
+Although both graph6 codes and Double-valued keys should be rather small in size,
+it appears that Java virtual machine is too generous in its memory management,
+so that we were not able to run this method
+on the set of 11,716,571 connected graphs on 10 vertices on computers available to us
+(although it works without problems on the set of 261,080 connected graphs on 9 vertices).</p>
+<p>As in the case of <code class="docutils literal notranslate"><span class="pre">ExtremalTemplate</span></code> class,
+<code class="docutils literal notranslate"><span class="pre">key</span></code> is <code class="docutils literal notranslate"><span class="pre">Double</span></code> object constructed
+from a supplied integer (<code class="docutils literal notranslate"><span class="pre">int</span></code>) or float (<code class="docutils literal notranslate"><span class="pre">double</span></code>) value.
+For example, in the downloaded version of the framework:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Double</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">energy</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>constructs <code class="docutils literal notranslate"><span class="pre">key</span></code> from the <code class="docutils literal notranslate"><span class="pre">double</span></code> value returned by <code class="docutils literal notranslate"><span class="pre">energy()</span></code> method of <code class="docutils literal notranslate"><span class="pre">Graph</span></code> class.
+As it is expected that the number of graphs sharing invariant values will be relatively small,
+<code class="docutils literal notranslate"><span class="pre">run</span></code> method for each <code class="docutils literal notranslate"><span class="pre">key</span></code> shared by at least two graphs
+output each graph (with key added as data) to a separate dot file for later visualization with Graphviz.
+Dot filenames include numbers of vertices, keys and ordinal numbers (within the group sharing the key)
+for easier identification. The reader is invited to consult source code for remaining implementation details.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to graph6java documentation!</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#preliminary-setup">Preliminary setup</a><ul>
+<li><a class="reference internal" href="#bluej-colt-and-the-framework-source-code">BlueJ, Colt and the framework source code</a></li>
+<li><a class="reference internal" href="#sets-of-graphs-in-graph6-format-and-nauty">Sets of graphs in graph6 format and nauty</a></li>
+<li><a class="reference internal" href="#visualisation-of-graphs-with-graphviz">Visualisation of graphs with Graphviz</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#framework-description">Framework description</a><ul>
+<li><a class="reference internal" href="#graph-class">Graph class</a></li>
+<li><a class="reference internal" href="#reportertemplate-class">ReporterTemplate class</a></li>
+<li><a class="reference internal" href="#subsettemplate-class">SubsetTemplate class</a></li>
+<li><a class="reference internal" href="#extremaltemplate-class">ExtremalTemplate class</a></li>
+<li><a class="reference internal" href="#equitemplate-class">EquiTemplate class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Dragan Stevanovic, Mohammad Ghebleh, Ali Kanso.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

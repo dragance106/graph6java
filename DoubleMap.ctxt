@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=DoubleMap
+comment1.params=key
+comment1.target=java.util.Vector\ getEqualGraphs(java.lang.Double)
+comment1.text=\n\ Retrieves\ a\ vector\ collection\ of\ g6codes\ whose\ keys\ differ\ from\ the\ provided\ key\n\ by\ less\ than\ {@see\ DoubleUtil.DOUBLE_EQUALITY_THRESHOLD}.\n\ \n\ @param\ key\ The\ provided\ key.\n\ @return\ Vector\ collection\ of\ g6codes\ whose\ keys\ are\ approximately\ equal\ to\ the\ provided\ key.\n
+comment2.params=key
+comment2.target=boolean\ containsEqualKeys(java.lang.Double)
+comment2.text=\n\ Responds\ whether\ the\ collection\ already\ contains\ keys\ \n\ that\ are\ approximately\ equal\ to\ the\ provided\ key.\n\ \n\ @param\ key\ Double\ value\ that\ we\ are\ checking\ for\ existence.\n\ @return\ boolean\ True\ if\ the\ collection\ already\ contains\ an\ approximately\ equal\ key.\n
+comment3.params=key
+comment3.target=java.util.Set\ getEqualKeys(java.lang.Double)
+comment3.text=\n\ Retrieves\ the\ set\ of\ keys\ from\ the\ collection,\ \n\ which\ differ\ from\ the\ provided\ key\ less\ than\ {@see\ DoubleUtil.DOUBLE_EQUALITY_THRESHOLD}.\n\ \n\ @param\ key\ The\ provided\ key.\n\ @return\ Set\ The\ set\ of\ keys\ in\ the\ collection\ that\ are\ approximately\ equal\ to\ the\ provided\ one.\n
+comment4.params=key\ value
+comment4.target=java.util.Vector\ put(java.lang.Double,\ java.lang.String)
+comment4.text=\n\ Puts\ a\ g6code\ and\ its\ corresponding\ key\ into\ the\ map.\n\ Keys\ are\ organised\ so\ that\ they\ are\ approximately\ equal\ in\ the\ sense\ that\n\ if\ a\ map\ already\ contains\ approximately\ equal\ key,\ \n\ then\ a\ new\ value\ is\ not\ put\ under\ its\ key,\ but\ under\ the\ approximate\ key\ found\ in\ the\ map.\n\ \n\ @see\ java.util.Map\#put(Object,\ Object)\n
+numComments=5
